@@ -1,6 +1,4 @@
-
-//import 'package:path/path.dart';
-import 'package:rxdio/com/kukugtu/rxdio/utils/path/path.dart';
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseUtil {
@@ -86,12 +84,13 @@ class DatabaseUtil {
   static Future<int> updateHttp(
       Database database, String cacheKey, String value) async {
     cacheKey = cacheKey.replaceAll("\"", "\\\"");
-    return await database.rawUpdate('UPDATE UGrownewsHttp SET  value = \'' +
-        value +
-        '\' WHERE cacheKey = \'' +
-        cacheKey +
-        '\'').then((value){
-    });
+    return await database
+        .rawUpdate('UPDATE UGrownewsHttp SET  value = \'' +
+            value +
+            '\' WHERE cacheKey = \'' +
+            cacheKey +
+            '\'')
+        .then((value) {});
   }
 
   /*

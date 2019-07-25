@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:rxdio/com/kukugtu/rxdio/utils/DatabaseUtil.dart';
 import 'package:rxdio/com/kukugtu/rxdio/utils/NetUtils.dart';
 import 'package:rxdio/com/kukugtu/rxdio/utils/TextUtil.dart';
 import 'NetCallBack.dart';
@@ -14,6 +15,14 @@ class RxDio<T> {
   REQUEST_METHORD _requestMethord;
   CacheMode _cacheMode = CacheMode.NO_CACHE;
   Map<String, String> _params;
+
+  static Future initDatabase() {
+    return DatabaseUtil.initDatabase();
+  }
+
+  static bool isDatabaseReady() {
+    return DatabaseUtil.isDatabaseReady;
+  }
 
   RxDio() : super();
 

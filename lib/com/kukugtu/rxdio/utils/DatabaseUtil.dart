@@ -3,12 +3,17 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseUtil {
   static Database database;
+  static bool isDatabaseReady = false;
 
-  static initDatabase() async {
-    String databasePath = await createDatabase();
-    openHttpDatabase(databasePath).then((database) {
+  static Future initDatabase() {
+    Future future = new Future(() async {
+      String databasePath = await createDatabase();
+      Database database = await openHttpDatabase(databasePath);
       DatabaseUtil.database = database;
+      isDatabaseReady = true;
+      return "DatabaseReady";
     });
+    return future;
   }
 
   /*

@@ -5,8 +5,11 @@
 目前支持GET，POST请求，
 缓存模式支持：
 1 NO_CACHE, //没有缓存
+
 2 DEFAULT, //按照HTTP协议的默认缓存规则(暂未实现)
+
 3 REQUEST_FAILED_READ_CACHE, //先请求网络，如果请求网络失败，则读取缓存，如果读取缓存失败，本次请求失败
+
 4 FIRST_CACHE_THEN_REQUEST, //先使用缓存，不管是否存在，仍然请求网络
 
 

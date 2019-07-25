@@ -27,6 +27,7 @@ step 2:
 DatabaseUtil.initDatabase();
 
 step 3：
+’‘’
 RxDio<String>()
   ..setBaseUrl("https://web.kukugtu.top/")
   ..setPath("KukugtuProject/redpackage/ListRedpackage_app.php")
@@ -46,3 +47,4 @@ RxDio<String>()
       },
     ),
   );
+    ‘’‘

@@ -17,7 +17,9 @@ class RxDio<T> {
   REQUEST_METHORD _requestMethord;
   CacheMode _cacheMode = CacheMode.NO_CACHE;
   Map<String, String> _params;
-  JsonTransformation<T> _jsonTransformation;
+  JsonTransformation<T> _jsonTransformation = (data) {
+    return data as T;
+  };
 
   static Future initDatabase() {
     return DatabaseUtil.initDatabase();
@@ -53,17 +55,8 @@ class RxDio<T> {
     this._cacheMode = cacheMode;
   }
 
-  void setJsonTransFrom(JsonTransformation<T> jsonTransformation){
-    if(T is String){
-      _jsonTransformation = (data){
-        return data as T;
-      };
-    }else{
-      _jsonTransformation = jsonTransformation;
-      if(_jsonTransformation == null){
-        throw new Exception("转换类型非String的情况下，必须设置json转换器");
-      }
-    }
+  void setJsonTransFrom(JsonTransformation<T> jsonTransformation) {
+    _jsonTransformation = jsonTransformation;
   }
 
   void call(NetCallback<T> netCallback) {
@@ -88,14 +81,16 @@ class RxDio<T> {
 
         future.then((response) {
           controller.add(new RequestData(
-              requestType: RequestType.NET, data: _jsonTransformation(response.data)));
+              requestType: RequestType.NET,
+              data: _jsonTransformation(response.data)));
         });
       } else if (_requestMethord == REQUEST_METHORD.GET) {
         Future<Response<String>> future =
             NetUtils.postNet<String>(_baseurl + _path, _params);
         future.then((response) {
           controller.add(new RequestData(
-              requestType: RequestType.NET, data: _jsonTransformation(response.data)));
+              requestType: RequestType.NET,
+              data: _jsonTransformation(response.data)));
         });
       }
     } else if (_cacheMode == CacheMode.FIRST_CACHE_THEN_REQUEST) {
@@ -104,7 +99,7 @@ class RxDio<T> {
         if (list.length > 0) {
           controller.add(new RequestData(
               requestType: RequestType.CACHE,
-              data:_jsonTransformation(json.decoder.convert(list[0]["value"])),
+              data: _jsonTransformation(json.decoder.convert(list[0]["value"])),
               statusCode: 200));
         } else {
           controller.add(new RequestData(
@@ -115,7 +110,8 @@ class RxDio<T> {
       if (_requestMethord == REQUEST_METHORD.GET) {
         NetUtils.getNet<String>(_baseurl + _path, _params).then((response) {
           controller.add(new RequestData(
-              requestType: RequestType.NET, data: _jsonTransformation(response.data)));
+              requestType: RequestType.NET,
+              data: _jsonTransformation(response.data)));
           NetUtils.saveCache(
               NetUtils.getCacheKeyFromPath(_baseurl + _path, _params),
               json.encoder.convert(response.data));
@@ -123,7 +119,8 @@ class RxDio<T> {
       } else if (_requestMethord == REQUEST_METHORD.GET) {
         NetUtils.postNet<String>(_baseurl + _path, _params).then((response) {
           controller.add(new RequestData(
-              requestType: RequestType.NET, data: _jsonTransformation(response.data)));
+              requestType: RequestType.NET,
+              data: _jsonTransformation(response.data)));
           NetUtils.saveCache(
               NetUtils.getCacheKeyFromPath(_baseurl + _path, _params),
               json.encoder.convert(response.data));
@@ -134,13 +131,15 @@ class RxDio<T> {
         NetUtils.getNet<String>(_baseurl + _path, _params).then((response) {
           if (response.statusCode == 200) {
             controller.add(new RequestData(
-                requestType: RequestType.NET, data: _jsonTransformation(response.data)));
+                requestType: RequestType.NET,
+                data: _jsonTransformation(response.data)));
           } else {
             NetUtils.getCache(_baseurl + _path, _params).then((list) {
               if (list.length > 0) {
                 controller.add(new RequestData(
                     requestType: RequestType.CACHE,
-                    data: _jsonTransformation(json.decoder.convert(list[0]["value"])),
+                    data: _jsonTransformation(
+                        json.decoder.convert(list[0]["value"])),
                     statusCode: 200));
               } else {
                 controller.add(new RequestData(
@@ -155,13 +154,15 @@ class RxDio<T> {
         NetUtils.postNet<String>(_baseurl + _path, _params).then((response) {
           if (response.statusCode == 200) {
             controller.add(new RequestData(
-                requestType: RequestType.NET, data: _jsonTransformation(response.data)));
+                requestType: RequestType.NET,
+                data: _jsonTransformation(response.data)));
           } else {
             NetUtils.getCache(_baseurl + _path, _params).then((list) {
               if (list.length > 0) {
                 controller.add(new RequestData(
                     requestType: RequestType.CACHE,
-                    data: _jsonTransformation(json.decoder.convert(list[0]["value"])),
+                    data: _jsonTransformation(
+                        json.decoder.convert(list[0]["value"])),
                     statusCode: 200));
               } else {
                 controller.add(new RequestData(
